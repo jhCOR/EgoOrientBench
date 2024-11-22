@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+    </style>
+    <script>
+        function sendRequest(category) {
+            window.location.href = "/gallery?category=" + encodeURIComponent(category);
+        }
+        function show_category(){
+            category_list = document.getElementById("category_list")
+            if(category_list.style.display == 'none'){
+                category_list.style.display = 'block';
+            }else{
+                category_list.style.display = 'none';
+            }
+            
+        }
+    </script>
+</head>
+<body>
+    <h1>Photo Gallery</h1>
+    <div>
+        아래 버튼 중 하나를 골라주세요.
+        <ul>
+            <a href="./gallery">전체 카테고리</a>
+        </ul>
+        
+        <h3 onclick="show_category()">카테고리 목록 열기/닫기</h3>
+        <ul id = "category_list" style="display: none;">
+            {% for category in categories %}
+            {% if (result.get(category) > 100) %}
+                <button style="color: red;" onclick="sendRequest('{{ category }}')">
+                    {{ category }}({{ result.get(category) }})
+                </button>
+            {% else %}
+                <button onclick="sendRequest('{{ category }}')">
+                    {{ category }}({{ result.get(category) }})
+                </button>
+            {% endif %}
+                
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <a href="./home">홈으로</a>
+    {% for i in range(page_amount) %}
+        <a href="./gallery?page={{i}}&category={{current}}">{{i}}</a>
+    {% endfor %}
+    <div class="gallery">
+        {% for photo_path in photos %}
+            <img src="{{ photo_path['current_path'] }}">
+            
+            <form action="/cancel" method="POST">
+                <input readonly type="text" name="answer" value="정답: {{photo_path['answer']}}">
+                <input readonly type="text" name="cateogry" value="분류: {{photo_path['cateogry']}}">
+                <input readonly type="text" name="path" value="{{ photo_path['path'] }}">
+                <input readonly type="text" name="current" value="{{ current }}">
+                <input readonly style="display: none;" type="text" name="page" value="{{ current_page }}">
+                <button type="submit" name="cancel_annotation" id="submit" >최소하기</button>
+            </form>
+        {% endfor %}
+    </div>
+</body>
+</html>

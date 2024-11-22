@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0,1 nohup python ../Egocentric_Evaluation/inference/eval_internvl_zeroshot.py > zeroshot_inference.log &

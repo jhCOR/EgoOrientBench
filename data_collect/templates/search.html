@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .content div a {
+                    font-weight: bold;
+                    text-decoration-line: underline;
+                    text-decoration-color: gray;
+                }
+        .clean-button{
+                    border:solid black 2px !important;
+                    border-radius: 10px;
+                }
+    </style>
+    <style>
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+    </style>
+     <script>
+        function sendRequest() {
+            window.location.href = "/home";
+        }
+    </script>
+</head>
+<body>
+    <form action="/search" method="GET">
+        <label for="url">이미지 검색</label>
+        <input type="text" name="target" id="target" autofocus>
+        <button type="submit" name="button_click" id="submitButton"  class="clean-button" style="width: 170px; height: 30px;">
+            확인
+        </button>
+    </form>
+    <div id="urlForm" style="background-color: #a3a3a3; border-radius: 10px; font-size:1.2rem; width:90%; text-align: center;">
+        <div style="margin-top: 20px; text-align: center;">
+            <label for="url">검색된 이미지</label>
+            <svg onclick="sendRequest()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-x-square" viewBox="0 0 16 16">
+                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"></path>
+            </svg>
+            <br>
+            <div class="gallery">
+                {% if paths %}
+                    {% for path in paths %}
+                        <img width="100%" src="{{ path }}">
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

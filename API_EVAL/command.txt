@@ -1,0 +1,16 @@
+[Open ai Chat GPT]
+
+[before you run]
+1. Check GPT version
+    there are many versions such as "gpt-4o-2024-08-06"
+2. Make your serect key and store somewhere
+    for example, make SECRET folder and put SECRET/secrete.json file in the folder
+
+    The code below will get your API key from file
+    with open(os.path.expanduser("~/SECRET/secrete.json"), "r") as f:
+        json_data = json.load(f)
+
+[Run]
+nohup bash ./script/openai.sh > log/openai.log 2>&1 &
+
+

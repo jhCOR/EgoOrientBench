@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 style="color: gray;">Data Labeling System</h1>
+    <style>
+        .diff-box{
+                    background-color: #006633;
+                    color: white;
+                    padding: 0.5rem;
+                }
+        .clean-button{
+                    border:solid black 2px !important;
+                    border-radius: 10px;
+                }
+        .a {
+            font-weight: bold;
+            text-decoration-line: underline;
+            text-decoration-color: gray;
+        }
+    </style>
+    <script>
+        var inputField = document.getElementById("inputField");
+        inputField.addEventListener("keyup", function(event) {
+        var input_text = document.getElementById("ans_text").value;
+            // keyCode 13은 엔터 키를 나타냄
+            if (event.keyCode === 13) {
+                // 버튼 클릭
+                document.getElementById("submitButton").click();
+            }
+        });
+    </script>
+    <script>
+        function sendRequest(category) {
+            // XMLHttpRequest 객체를 생성
+            window.location.href = "/home?category=" + encodeURIComponent(category);
+        }
+        function show_category(){
+            category_list = document.getElementById("category_list")
+            if(category_list.style.display == 'none'){
+                category_list.style.display = 'block';
+            }else{
+                category_list.style.display = 'none';
+            }
+        }
+        function show_result(){
+            result_list = document.getElementById("result_list")
+            if(result_list.style.display == 'none'){
+                result_list.style.display = 'block';
+            }else{
+                result_list.style.display = 'none';
+            }
+        }
+    </script>
+    <script>
+        var rectCoordinates = null;
+        window.addEventListener("load", function (event) {
+            var canvas = document.getElementById("img_canvas");
+            var box_area = document.getElementById("region");
+            var image_form = document.getElementById("image");
+            var context = canvas.getContext("2d");
+            
+            var c_width = canvas.width;
+            var c_height = canvas.height;
+
+            let startX, startY, endX, endY;
+            let isDrawing = false;
+
+            var img = new Image();
+            img.src = "{{ img_path }}"; // img_path 변수로부터 이미지 파일 경로를 받아 로딩 시작
+
+            let imgData, centerShift_x, centerShift_y, ratio;
+
+            img.onload = function() {
+                var hRatio = canvas.width / img.naturalWidth;
+                var vRatio = canvas.height / img.naturalHeight;
+                ratio = Math.min(hRatio, vRatio);
+                centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
+                centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
+                                centerShift_x, centerShift_y, img.naturalWidth * ratio, img.naturalHeight * ratio);
+                imgData = context.getImageData(0, 0, canvas.width, canvas.height); // 이미지 데이터를 저장
+            };
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                startX = e.offsetX;
+                startY = e.offsetY;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDrawing) {
+                    endX = e.offsetX;
+                    endY = e.offsetY;
+                    draw();
+                }
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                isDrawing = false;
+                rectCoordinates = {
+                    startX: startX,
+                    startY: startY,
+                    endX: endX,
+                    endY: endY,
+                    width: endX - startX,
+                    height: endY - startY
+                };
+                console.log("("+startX + ", "+startY + ", " + endX + ", " + endY + ")" )
+                box_area.value = "("+startX + ", "+startY + ", " + endX + ", " + endY + ")" 
+                image_form.value = canvas.toDataURL('image/jpeg');
+                document.getElementById('ans_text').focus();
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+
+                isDrawing = false;
+            });
+
+            function draw() {
+                if (c_width == null) return;
+                context.putImageData(imgData, 0, 0); // 저장된 이미지 데이터를 다시 그리기
+                context.beginPath();
+                context.rect(startX, startY, endX - startX, endY - startY);
+                context.lineWidth = 5; 
+                context.strokeStyle = 'red';
+                context.stroke();
+            }
+            function clearline(){
+                if (c_width == null) return;
+                context.putImageData(imgData, 0, 0);
+            }
+        });
+        
+    </script>
+    
+</head>
+<body>
+    <section style="border: 2px solid #ccc; padding: 1rem; border-radius: 10px;">
+        <div>
+            <h3 style="color: red;">현재 모드: {{ category }}</h3>
+            <h3>모드 변경 시 아래 버튼 중 하나를 골라주세요.</h3>
+            <button onclick="sendRequest('actor_aspect')">행위자 관점</button>
+            <button onclick="sendRequest('viewer_aspect')">관찰자 관점</button>
+        </div>
+    </section>
+
+    <br>
+
+    <section>
+        <div>
+
+            {% if img_path %}
+            <canvas id="img_canvas" width=400 height=400 style="border: 1px solid #000;"></canvas>
+            <button onclick="clearline()">상자 다시 그리기</button>
+            {% else %}
+            <p>I can't find the path...</p>
+            {% endif %}
+
+            <form action="/submit_answer" method="POST">
+                <input type="number" name="answer" id="ans_text" autofocus>
+                <input value="" name="region" id="region">
+                <input value="{{ img_path }}" name="path" id="path">
+                <input value="{{ category }}" name="category">
+                <input style="display: none;" name="image" id="image">
+                <button type="submit" name="button_click" id="submitButton" >확인</button>
+            </form>
+        </div>
+    </section>
+
+    <br>
+
+    <section>
+        <div>
+            <a class="diff-box clean-button" href='./static/annotation.json' download="annotation.json">json 파일 다운로드</a>
+            <a class="diff-box clean-button" href="./gallery">사진 확인</a>
+            <a class="diff-box clean-button" href="./search">사진 검색</a>
+            <a class="diff-box clean-button" href="./develop">개발노트</a>
+        </div>
+    </section>
+</body>
+</html>

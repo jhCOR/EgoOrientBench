@@ -1,0 +1,20 @@
+[
+    {
+        "path": "./imagenet_after/COCO_val2014_000000358765.jpg",
+        "answer": "3",
+        "direction": "front right",
+        "category_name": "bird",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "conversations": []
+    },
+    {
+        "path": "./imagenet_after/COCO_val2014_000000492723.jpg",
+        "answer": "2",
+        "direction": "front",
+        "category_name": "bear",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "conversations": []
+    }
+]

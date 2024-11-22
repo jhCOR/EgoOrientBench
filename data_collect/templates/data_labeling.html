@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라벨링</title>
+    <style>
+        .diff-box{
+                    background-color: #006633;
+                    color: white;
+                    padding: 0.5rem;
+                }
+        .clean-button{
+                    border:solid black 2px !important;
+                    border-radius: 10px;
+                }
+        .a {
+            font-weight: bold;
+            text-decoration-line: underline;
+            text-decoration-color: gray;
+        }
+    </style>
+    <script>
+        // input 요소 가져오기
+        var inputField = document.getElementById("inputField");
+
+        // enter 키가 눌리면 버튼 클릭 이벤트 발생
+        inputField.addEventListener("keyup", function(event) {
+        var input_text = document.getElementById("ans_text").value;
+
+            // keyCode 13은 엔터 키를 나타냄
+            if (event.keyCode === 13) {
+                // 버튼 클릭
+                document.getElementById("submitButton").click();
+            }
+        });
+        function submit(){
+
+        }
+    </script>
+    <script>
+        function sendRequest(category) {
+            // XMLHttpRequest 객체를 생성
+            window.location.href = "/home?category=" + encodeURIComponent(category);
+        }
+        function show_category(){
+            category_list = document.getElementById("category_list")
+            if(category_list.style.display == 'none'){
+                category_list.style.display = 'block';
+            }else{
+                category_list.style.display = 'none';
+            }
+            
+        }
+        function show_result(){
+            result_list = document.getElementById("result_list")
+            if(result_list.style.display == 'none'){
+                result_list.style.display = 'block';
+            }else{
+                result_list.style.display = 'none';
+            }
+            
+        }
+    </script>
+</head>
+<body>
+    <section>
+        <div>
+            아래 버튼 중 하나를 골라주세요.
+            <h3 onclick="show_category()">카테고리 목록 열기/닫기</h3>
+            <ul id = "category_list" style="display: none;">
+                {% for category in categories %}
+                {% if (result.get(category) > 100) %}
+                    <button style="color: red;" onclick="sendRequest('{{ category }}')">
+                        {{ category }}({{ result.get(category) }})
+                    </button>
+                
+                {% else %}
+                    {% if (result.get(category) > 10) %}
+                    <button title="{{ cate_name.get(category) }}" style="color: blue;"  onclick="sendRequest('{{ category }}')">
+                        {{ category }}({{ result.get(category) }})
+                    </button>
+                    {% else %}
+                    <button  title="{{ cate_name.get(category) }}" onclick="sendRequest('{{ category }}')">
+                        {{ category }}({{ result.get(category) }})
+                    </button>
+                    {% endif %}
+                {% endif %}
+                    
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    <section>
+        {% if img_path %}
+        <img width="40%" src="{{ img_path }}">
+        {% else %}
+        <h1>Hello, World!</h1>
+        {% endif %}
+        <form action="/button_click" method="POST">
+            <input type="number" name="answer" id="ans_text" autofocus>
+            <input value="{{ img_path }}" name="path">
+            <input value="{{ cate }}" name="category">
+            <button type="submit" name="button_click" id="submitButton" >확인</button>
+        </form>
+    </section>
+    <section>
+        <h3 onclick="show_result()">결과 목록 열기/닫기</h3>
+        <div id = "result_list" style="display: none;">
+            {{result}}
+        </div>
+        <br>
+        <a class="diff-box clean-button" href='./static/annotation.json' download="annotation.json">json 파일 다운로드</a>
+        <a class="diff-box clean-button" href="./gallery">사진 확인</a>
+        <a class="diff-box clean-button" href="./search">사진 검색</a>
+    </section>
+</body>
+</html>

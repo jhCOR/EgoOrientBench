@@ -1,0 +1,9 @@
+{
+    "egocentric_orientation_instruction_tuning": {
+      "root": "../../../all_data/EgocentricDataset/imagenet_after/",
+      "annotation": "../../../all_data/EgocentricDataset/train_benchmark/output.jsonl",
+      "data_augment": false,
+      "repeat_time": 1,
+      "length": 7335
+    }
+}

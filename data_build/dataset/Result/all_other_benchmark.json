@@ -1,0 +1,102 @@
+[
+    {
+        "type": "general_complex",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000358765.jpg",
+        "original_label": "front right",
+        "question": "From the perspective of the camera, which orientation is the bird in the photo facing? A.front B.front right C.right D.back right E.back F.back left G.left H.front left\n Answer with the option's letter and word from the given choices directly. Answer: [choose one in A.front B.front right C.right D.back right E.back F.back left G.left H.front left]",
+        "label": "front right",
+        "category_name": "bird"
+    },
+    {
+        "type": "freeform",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000358765.jpg",
+        "original_label": "front right",
+        "question": "From the perspective of the camera, Answer what orientation the bird in the picture is facing.",
+        "label": "facing right while facing the camera",
+        "category_name": "bird"
+    },
+    {
+        "type": "general_two_option",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000358765.jpg",
+        "original_label": "front right",
+        "question": "Is the bird facing 'front right' or 'back right' from the camera's perspective? \nAnswer the question using a single word or phrase only.",
+        "label": "front right",
+        "category_name": "bird"
+    },
+    {
+        "type": "general_binary",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000358765.jpg",
+        "original_label": "front right",
+        "question": "Is the bird facing 'front right' from the camera's perspective? \nAnswer with 'yes' or 'no' only.",
+        "label": "yes",
+        "category_name": "bird"
+    },
+    {
+        "type": "general_binary",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000358765.jpg",
+        "original_label": "front right",
+        "question": "Is the bird facing 'back left' from the camera's perspective? \nAnswer with 'yes' or 'no' only.",
+        "label": "no",
+        "category_name": "bird"
+    },
+    {
+        "type": "general_complex",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000492723.jpg",
+        "original_label": "front",
+        "question": "From the perspective of the camera, which orientation is the bear in the photo facing? A.front B.front right C.right D.back right E.back F.back left G.left H.front left\n Answer with the option's letter and word from the given choices directly. Answer: [choose one in A.front B.front right C.right D.back right E.back F.back left G.left H.front left]",
+        "label": "front",
+        "category_name": "bear"
+    },
+    {
+        "type": "freeform",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000492723.jpg",
+        "original_label": "front",
+        "question": "From the perspective of the camera, Answer what orientation the bear in the picture is facing.",
+        "label": "facing the camera",
+        "category_name": "bear"
+    },
+    {
+        "type": "general_two_option",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000492723.jpg",
+        "original_label": "front",
+        "question": "Is the bear facing 'front' or 'left' from the camera's perspective? \nAnswer the question using a single word or phrase only.",
+        "label": "front",
+        "category_name": "bear"
+    },
+    {
+        "type": "general_binary",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000492723.jpg",
+        "original_label": "front",
+        "question": "Is the bear facing 'front' from the camera's perspective? \nAnswer with 'yes' or 'no' only.",
+        "label": "yes",
+        "category_name": "bear"
+    },
+    {
+        "type": "general_binary",
+        "domain": "real",
+        "base_dataset": "D3_Eval",
+        "image": "./imagenet_after/COCO_val2014_000000492723.jpg",
+        "original_label": "front",
+        "question": "Is the bear facing 'front left' from the camera's perspective? \nAnswer with 'yes' or 'no' only.",
+        "label": "no",
+        "category_name": "bear"
+    }
+]
