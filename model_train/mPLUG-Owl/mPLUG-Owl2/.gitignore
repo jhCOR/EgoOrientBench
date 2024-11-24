@@ -34,3 +34,5 @@ dataset/*.idx
 test.ipynb
 MyResult/
 checkpoints/
+checkpoint/
+build/*

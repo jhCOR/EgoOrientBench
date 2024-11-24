@@ -269,7 +269,7 @@ def main():
             'image_dir': os.path.expanduser("~/EgoOrientBench/all_data/EgocentricDataset/"),
         }
     
-    for i in range(5):
+    for i in range(1):
         restrict_seed(i)
         result_dict_accuracy = inference( config , model, tokenizer, image_processor)
         print("index:", i, result_dict_accuracy)
@@ -293,20 +293,3 @@ def calculateIntervel(data_list):
 
 if __name__ == '__main__':
     final_result_collection = main()
-
-    accuracy_collect = {}
-    for item in final_result_collection['accuracy']:
-        for key in item.keys():
-            if(accuracy_collect.get(key) is None):
-                accuracy_collect[key] = []
-            accuracy_collect[key].append( item[key] )
-    confi_collection = {}
-
-    for a_key in list(accuracy_collect.keys()):
-        a_list = accuracy_collect.get(a_key)
-
-        confi_interval = calculateIntervel(a_list)
-
-        confi_collection[a_key] = confi_interval
-    with open(f'./Zeroshot3/confidential_interval.json', 'w', encoding='utf-8') as f:
-        json.dump(confi_collection, f, indent=4)

@@ -2,9 +2,9 @@
 export CUDA_VISIBLE_DEVICES=0
 LOAD='MAGAer13/mplug-owl2-llama2-7b'
 
-DATA_FILE=../../../all_data/EgocentricDataset/imagenet_train_mplugowl.json.json
-VALID_DATA_FILE=../../../all_data/EgocentricDataset/benchmark.json
-MOCK_DATA_FILE=../../../all_data/EgocentricDataset/imagenet_QA_7b_clean_test_mplugowl.json
+DATA_FILE=../../../all_data/EgocentricDataset/additional_data/imagenet_QA_7b_clean_test_mplugowl.json
+VALID_DATA_FILE=../../../all_data/EgocentricDataset/additional_data/benchmark_mini.json
+MOCK_DATA_FILE=../../../all_data/EgocentricDataset/additional_data/imagenet_QA_7b_clean_test_mplugowl.json
 
 python mplug_owl2/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --visual_abstractor_lr 2e-5 \
@@ -17,7 +17,7 @@ python mplug_owl2/train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir /data/EgoOrientBench/Result_Collector/mPLUG_Owl/final_score/seed0/mplug-owl2-finetune-lora \
+    --output_dir ./checkpoint/mplug-owl2-finetune-lora \
     --num_train_epochs 3 \
     --per_device_train_batch_size 2 \
     --per_device_eval_batch_size 2 \

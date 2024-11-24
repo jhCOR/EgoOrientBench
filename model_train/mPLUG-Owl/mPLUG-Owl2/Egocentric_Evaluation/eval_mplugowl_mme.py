@@ -88,7 +88,7 @@ def eval_model(_setting, data_object, _model , _tokenizer, _image_processor):
     outputs = _tokenizer.decode(output_ids[0, input_ids.shape[1]:]).strip()
     return outputs
 
-def inference(model, tokenizer, image_processor, setting=None, train=None):
+def inference(setting, model, tokenizer, image_processor, train=None):
     
     if train is True:
         setting['train_process'] = True

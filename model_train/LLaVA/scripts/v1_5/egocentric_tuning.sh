@@ -5,8 +5,8 @@ python llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --model_name_or_path liuhaotian/llava-v1.5-7b \
     --version v1 \
-    --data_path ../../all_data/EgocentricDataset/train_benchmark/imagenet_train.json \
-    --valid_data_path ../../all_data/EgocentricDataset/train_benchmark/benchmark.json \
+    --data_path ../../all_data/EgocentricDataset/additional_data/imagenet_QA_7b_clean_test.json \
+    --valid_data_path ../../all_data/EgocentricDataset/additional_data/benchmark_mini.json \
     --mock_data_path ../../all_data/EgocentricDataset/additional_data/imagenet_QA_7b_clean_test.json \
     --image_folder ../../all_data/EgocentricDataset/imagenet_after  \
     --vision_tower openai/clip-vit-large-patch14-336 \
@@ -18,7 +18,7 @@ python llava/train/train_mem.py \
     --image_aspect_ratio pad \
     --group_by_modality_length True \
     --bf16 True \
-    --output_dir /data/EgoOrientBench/Result_Collector/LLaVA/final_score/seed0/llava-v1.5-7b-task-lora \
+    --output_dir ./checkpoints/llava-v1.5-7b-task-lora \
     --num_train_epochs 3 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \

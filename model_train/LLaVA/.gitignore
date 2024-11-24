@@ -38,3 +38,4 @@ stage1_checkpoint/*
 stage2_checkpoint/*
 Zeroshot/*
 Total_Demo/*
+build/*

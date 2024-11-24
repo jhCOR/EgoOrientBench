@@ -43,7 +43,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 model_train_dir = os.path.join(current_dir, '../../')
 print(model_train_dir)
 sys.path.append(model_train_dir)
-from eval_llava_mme import inference, save_to_file
+from Egocentric_Evaluation.eval_llava_mme import inference, save_to_file
 
 local_rank = None
 
@@ -1032,10 +1032,21 @@ def train(automatic_setting, attn_implementation=None):
                                        output_dir=training_args.output_dir)
 
     try:
+        setting = {
+            'query': None,
+            'conv_mode': None, 
+            'image_file': None, 
+            'sep': ',', 
+            'temperature': 0.2, 
+            'top_p': None, 
+            'num_beams': 1, 
+            'max_new_tokens': 256,
+            "train_process": True
+        }
         print("Do MME")
         subfix = automatic_setting['result_output_dir'].split("/")[-1]
         eval_save_root_path = f"../../model_eval/MME/LLaVA_EVAL/{subfix}/"
-        final_result = inference(model, tokenizer, data_args.image_processor, train=True)
+        final_result = inference(setting, model, tokenizer, data_args.image_processor, train=True)
         save_to_file(final_result, eval_save_root_path)
 
     except Exception as e:

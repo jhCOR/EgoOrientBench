@@ -1,67 +1,26 @@
 from datetime import datetime
 from tqdm import tqdm
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 import argparse
-import base64
 import json
 import os
 
-from openai import OpenAI
-client = None
-
-from source.calculation import calculateIntervel, restrict_compare_Prediction_Answer, getF1Score, getF1ScorePerCategory
+from source.calculation import calculateIntervel, restrict_compare_Prediction_Answer
 from source.utils import remove_punctuation
 from source.logger import drawHeatMap, loggingResult
 from source.ResultCollector import ResultCollector
 
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+from source.Wrapper.main import create_model_wrapper
 
-def openai_eval_model_with_image(setting, prompt, image_path):
-
-    base64_image = encode_image(image_path)
-
-    # ChatCompletion API 호출
-    client = setting.get("client")
-    response = client.chat.completions.create(
-        model=setting['model_name'],
-        messages=[
-            {
-            "role": "user",
-            "content": [
-                {
-                "type": "text",
-                "text": prompt,
-                },
-                {
-                "type": "image_url",
-                "image_url": {
-                    "url":  f"data:image/jpeg;base64,{base64_image}"
-                },
-                },
-            ],
-            }
-        ],
-        temperature=setting.get("temperature", 0.2),
-        max_tokens=setting.get("max_new_tokens", 150),
-        frequency_penalty=0.0,
-        presence_penalty=0.0
-    )
-    return response.choices[0].message.content.strip()
-
-def inference( _setting):
+def inference( setting, model):
     result_collector = ResultCollector()
 
     annotation_data = None
-    with open(_setting['json_path'], "r") as f:
+    with open(setting['json_path'], "r") as f:
         annotation_data = json.load(f)
     
-    if _setting['mode'] == "test":
+    if setting['mode'] == "test":
         annotation_data = annotation_data[:5]
-    elif _setting['mode'] == "check":
+    elif setting['mode'] == "check":
         annotation_data = annotation_data[:100]
     else:
         print("전체 데이터 사용")
@@ -69,10 +28,10 @@ def inference( _setting):
     print("데이터 길이: ", len(annotation_data))
 
     for data in tqdm(annotation_data):
-        image_path = os.path.join(_setting['image_dir'], data['image'].replace("./", ""))
+        image_path = os.path.join(setting['image_dir'], data['image'].split("/")[-1])
         prompt = data['question']
 
-        prediction = openai_eval_model_with_image(_setting, prompt, image_path)
+        prediction = model.predict(prompt, image_path)
 
         if("complex" in data['type']):
             if len(prediction) > 1:
@@ -88,14 +47,14 @@ def inference( _setting):
 
         result_point = restrict_compare_Prediction_Answer(prediction, answer)
         result_collector.update(data, prediction, result_point)
-        result_collector.intermediate_save(_setting['dir_name'])
+        result_collector.intermediate_save(setting['dir_name'])
 
     result_collector.end()
     result_dict_accuracy = result_collector.getAccPerCategory()
     result_dict_f1 = result_collector.getF1ScorePerCategory()
 
-    loggingResult(_setting['mode'], f"{_setting['dir_name']}", result_collector.prediction_list)
-    drawHeatMap(f"{_setting['dir_name']}", _setting['mode'], list(result_collector.result_dict.keys()))
+    loggingResult(setting['mode'], f"{setting['dir_name']}", result_collector.prediction_list)
+    drawHeatMap(f"{setting['dir_name']}", setting['mode'], list(result_collector.result_dict.keys()))
     return {"accuracy": result_dict_accuracy, "f1_score": result_dict_f1}
 
 def postprocess_result(final_result_list, setting):
@@ -120,10 +79,11 @@ def postprocess_result(final_result_list, setting):
         json.dump(serializable_setting, f, indent=4)
     return CI_collection
 
-def main(_config):
+def main(config, model):
+
     final_result_collection = {}
     for i in range(1):
-        result_dict_accuracy = inference( _config )
+        result_dict_accuracy = inference( config, model )
         print("index:", i, result_dict_accuracy)
 
         for key in result_dict_accuracy.keys():
@@ -134,29 +94,50 @@ def main(_config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", type=str, default="test") 
+    parser.add_argument("--json_path", type=str, default="../all_data/EgocentricDataset/train_benchmark/benchmark.json")
+    parser.add_argument("--image_dir", type=str, default="../all_data/EgocentricDataset/imagenet_after")
+
+    parser.add_argument("--model_type", type=str, default="opensource")
+    parser.add_argument("--model_name", type=str, default="llava")
+    
+    parser.add_argument("--model_path", type=str, default=None)
+    parser.add_argument("--model_base", type=str, default=None)
+    parser.add_argument("--checkpoint", type=str, default=None)
+    parser.add_argument("--key", type=str, default=None)
+    parser.add_argument("--key_path", type=str, default=None)
+
+    parser.add_argument("--mode", type=str, default="check")
     args = parser.parse_args()
 
-    with open(os.path.expanduser("~/SECRET/secrete.json"), "r") as f:
-        json_data = json.load(f)
-    client = OpenAI(api_key=json_data['chatgpt'])
-
     now = datetime.now()
-    config = {
-        "mode":args.mode,
-        "dir_name": os.path.expanduser(f"~/EgoOrientBench/API_EVAL/Result/open_ai_{now.hour}_{now.minute}"),
-        'temperature': 0.2,
-        'num_beams': 1,
-        'max_new_tokens': 256,
-        "json_path":os.path.expanduser("~/EgoOrientBench/all_data/EgocentricDataset/train_benchmark/benchmark.json"),
-        "image_dir":os.path.expanduser("~/EgoOrientBench/all_data/EgocentricDataset"),
-        "client":client,
-        "model_name":"gpt-4o-2024-08-06"
+
+    configuration = {
+        "temperature": 0.2,
+        "max_new_tokens": 150,
     }
+    model_setting = {
+        "checkpoint": args.checkpoint,
+        "model_path": args.model_path,
+        "model_base": args.model_base,
+    }
+    model_wrapper = create_model_wrapper(args.model_type, 
+                                         args.model_name,
+                                           configuration, 
+                                           model_setting=model_setting,
+                                           key=args.key,
+                                           key_path=args.key_path)
+
     try:
+        config = {
+            "json_path": args.json_path,
+            "image_dir": args.image_dir,
+            "dir_name": f"./_Result/benchmark_{args.model_name}_{now.strftime('%H%M%S')}",
+            "mode": args.mode,
+        }
         print("파일 경로 확인:", os.path.exists(f'./{config["dir_name"]}'))
+        
         os.makedirs(f'{config["dir_name"]}', exist_ok=True)
-        final_result_collection = main(config)
+        final_result_collection = main(config, model_wrapper)
         postprocess_result(final_result_collection, config)
     except Exception as e:
         print("에러: ", e)
