@@ -1,9 +1,14 @@
 # EgoOrientBench
 
-## Overview
+[[Preprint]](https://arxiv.org/abs/2411.16761v1)
+[[How to Use]](https://github.com/jhCOR/EgoOrientBench/blob/main/How_to_USE.md)
+
+## Is MLLM truly understanding orientation?
+![image](https://github.com/user-attachments/assets/1557af5e-a946-4737-b3f1-eedc78fe2c95)
 
 EgoOrientBench is a comprehensive framework for evaluating and improving multimodal language models (MLLMs) with a focus on enhancing and evaluating understanding of orientation.
-It includes the following components:
+
+## Overview
 
 - **Data Build**
 - **Tuning**
@@ -40,7 +45,7 @@ gdown https://drive.google.com/uc?id=1ZXejrBfj6E3qtHYbrUxbnqdk16_osyjI
 
 ---
 
-## Relaed Project/Dataset
+## Related Project/Dataset
 
 - Preposition Dataset: https://github.com/amitakamath/whatsup_vlms
 - MME Benchmark: https://github.com/BradyFU/Awesome-Multimodal-Large-Language-Models
