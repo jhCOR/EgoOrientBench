@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 
-from source.calculation import calculateIntervel, restrict_compare_Prediction_Answer
+from source.calculation import calculateIntervel, restrict_compare_Prediction_Answer, compare_Prediction_Answer
 from source.utils import remove_punctuation
 from source.logger import drawHeatMap, loggingResult
 from source.ResultCollector import ResultCollector
@@ -45,7 +45,11 @@ def inference( setting, model):
         prediction = remove_punctuation(prediction)
         answer = remove_punctuation(answer)
 
-        result_point = restrict_compare_Prediction_Answer(prediction, answer)
+        if setting['restrict_eval'] == "yes":
+            result_point = restrict_compare_Prediction_Answer(prediction, answer)
+        else:
+            result_point = compare_Prediction_Answer(prediction, answer)
+        
         result_collector.update(data, prediction, result_point)
         result_collector.intermediate_save(setting['dir_name'])
 
@@ -106,7 +110,8 @@ if __name__ == '__main__':
     parser.add_argument("--key", type=str, default=None)
     parser.add_argument("--key_path", type=str, default=None)
 
-    parser.add_argument("--mode", type=str, default="check")
+    parser.add_argument("--mode", type=str, default="inference")
+    parser.add_argument("--restrict_eval", type=str, default="yes")
     args = parser.parse_args()
 
     now = datetime.now()
@@ -133,7 +138,13 @@ if __name__ == '__main__':
             "image_dir": args.image_dir,
             "dir_name": f"./_Result/benchmark_{args.model_name}_{now.strftime('%H%M%S')}",
             "mode": args.mode,
+            "restrict_eval": args.restrict_eval
         }
+        if config["restrict_eval"] == "yes":
+            print("The code pipeline will only mark answers as correct if it selects the exact right answer.")
+        else:
+            print("The code pipeline will mark answers as correct if the correct answer is included within a sentence or short phrase.")
+        
         print("파일 경로 확인:", os.path.exists(f'./{config["dir_name"]}'))
         
         os.makedirs(f'{config["dir_name"]}', exist_ok=True)

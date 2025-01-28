@@ -21,6 +21,21 @@ def restrict_compare_Prediction_Answer(prediction, answer):
         point = 0
     return point
 
+def compare_Prediction_Answer(prediction, answer):
+    two_word_label = ["front right", "front left", "back left", "back right"]
+    result = (answer in prediction)
+
+    if( len( answer.split(" ")) == 1 ):
+        for twl in two_word_label:
+            if( twl in prediction):
+                result = False
+                break
+    if(result):
+        point = 1
+    else:
+        point = 0
+    return point
+
 def getF1Score(category_list, result_list):
     f1_result = {}
     for category in category_list:
