@@ -3,6 +3,9 @@
 [[Preprint]](https://arxiv.org/abs/2411.16761v1)
 [[How to Use]](https://github.com/jhCOR/EgoOrientBench/blob/main/How_to_USE.md)
 
+[News]
+[2/27] Our Paper is accepted by CVPR25!
+
 ## Is MLLM truly understanding orientation?
 ![image](https://github.com/user-attachments/assets/1557af5e-a946-4737-b3f1-eedc78fe2c95)
 
