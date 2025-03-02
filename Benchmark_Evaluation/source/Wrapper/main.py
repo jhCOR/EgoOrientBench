@@ -42,6 +42,12 @@ def testAPIWrapper():
     model_wrapper = create_model_wrapper("api", "chatgpt", configuration, key_path=key_path)
     print(model_wrapper.predict("Describe the images", image_path))
 
+def testHuggingfaceWrapper():
+
+    image_path = os.path.expanduser("~/EgoOrientBench/all_data/EgocentricDataset/imagenet_after/000210065.jpg")
+    model_wrapper = create_model_wrapper("huggingface", "qwenvl", None)
+    print(model_wrapper.predict("Describe the images", image_path))
+
 def testOpensourceWrapper():
     configuration = {
         "temperature": 0.2,
@@ -57,5 +63,6 @@ def testOpensourceWrapper():
 
 if __name__ == "__main__":
     # testAPIWrapper()
-    #testOpensourceWrapper()
+    # testOpensourceWrapper()
+    # testHuggingfaceWrapper()
     pass
