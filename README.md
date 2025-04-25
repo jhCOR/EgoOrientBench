@@ -40,8 +40,12 @@ Detailed instructions on how to use our benchmark can be found in the following 
 ```bash
 gdown https://drive.google.com/uc?id=1ZXejrBfj6E3qtHYbrUxbnqdk16_osyjI
 ```
-
 [Link]: [Google Drive Link](https://drive.google.com/file/d/1ZXejrBfj6E3qtHYbrUxbnqdk16_osyjI/view?usp=drive_link)
+
+or
+[Huggingface](https://huggingface.co/datasets/jhCOR/EgoOrientBench) 
+
+
 ### You need to place the image_after folder under the path EgoOrientBench/all_data/EgocentricDataset.
 
 ---
