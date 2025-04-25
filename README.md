@@ -1,10 +1,10 @@
-# EgoOrientBench
+# 🧭 EgoOrientBench
 
 [[Paper]](https://arxiv.org/abs/2411.16761v1)
 [[How to Use]](https://github.com/jhCOR/EgoOrientBench/blob/main/How_to_USE.md)
+[[Project Page]](https://jhcor.github.io/egoorientbench_is_right_right/)
 
-[News]
-
+## 📰 News
 [2/27] Our Paper is accepted by [CVPR25](https://cvpr.thecvf.com/)! 🎉
 
 ## Is MLLM truly understanding orientation?
