@@ -98,7 +98,7 @@ def main(config, model):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--json_path", type=str, default="../all_data/EgocentricDataset/train_benchmark/benchmark.json")
+    parser.add_argument("--json_path", type=str, default="../all_data/EgocentricDataset/benchmark_data/benchmark.json")
     parser.add_argument("--image_dir", type=str, default="../all_data/EgocentricDataset/imagenet_after")
 
     parser.add_argument("--model_type", type=str, default="opensource")
