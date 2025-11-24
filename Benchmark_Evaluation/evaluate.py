@@ -33,7 +33,7 @@ def inference( setting, model):
 
         prediction = model.predict(prompt, image_path)
 
-        if("complex" in data['type']):
+        if("choose" in data['type']):
             if len(prediction) > 1:
                 prediction = prediction.lower().strip().replace(".", "")[1:]
             else:
